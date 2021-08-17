@@ -34,7 +34,7 @@ def Check(args):
 error_msg = "<html><body><h1>Not Found</h1></body></html>"
 
 
-#Checking if file exists to responce with 404 or 200 in the reciever function
+#Checking if file exists to responce with 404 or 200 in the hundler function
 def stat(folder, file):
     text = (folder + "/" + file)
     if os.path.exists(text):
