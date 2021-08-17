@@ -47,8 +47,11 @@ def stat(folder, file):
 
 def req_spliter(conn):
     #Gets file name from GET request
-    link = re.search('http:.+\.html', codecs.decode(conn, 'UTF-8'))
-    return link
+    link = str(re.search('/.+\.html', codecs.decode(conn, 'UTF-8')))
+    print(link)
+    text = link.split("/")
+    print(text)
+    return text[1]
 
 
 #Handles pretty much everything
