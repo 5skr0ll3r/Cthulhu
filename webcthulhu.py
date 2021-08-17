@@ -23,7 +23,7 @@ import os,sys,requests,socket,threading,re,codecs
 #Checking if values are valid
 def Check(args):
     if len(args) != 3:
-        sys.exit("Usage: python3 <port> <project_folder>\n\nInside the project_folder the main file should be called\nindex.html or else it wont work.")
+        sys.exit("Usage: python3 <port> <project_folder>\n\nInside the project_folder the main file should be called\nindex.html or else it wont work for now.")
 
     if not os.path.isdir(args[2]):
         sys.exit("Dir does not exist")
