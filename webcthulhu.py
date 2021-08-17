@@ -37,8 +37,9 @@ error_msg = "<html><body><h1>Not Found</h1></body></html>"
 #Checking if file exists to responce with 404 or 200 in the hundler function
 def stat(folder, name):
     text = (folder + "/" + name)
+    print((name, " ") * 10)
     if os.path.exists(text):
-        with open(text, "r") as ftext:
+        with open(text) as ftext:
             html = ftext.read()
             ftext.close()
             return html
@@ -52,7 +53,7 @@ def req_spliter(conn):
     name = link.group()
     file = name.split("/")
     print(file)
-    return file[1]
+    return file[3]
 
 
 #Handles pretty much everything
@@ -64,6 +65,9 @@ def handler(conn,addr, folder):
         print(packet)
         file = req_spliter(packet)
         print(file)
+        mimetype, _ = mimetypes.guess_type(file)
+        print((mimetype, " ") * 10)
+
         if stat(folder, file) != "False":
             conn.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {mimetype}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{stat(folder,file)}".encode())
