@@ -48,11 +48,7 @@ def stat(folder, file):
 def req_spliter(conn):
     #Gets file name from GET request
     link = re.search('http:.+\.html', codecs.decode(conn, 'UTF-8'))
-    parse = link.group()
-    parts = parse.split("/")
-    if len(parts) < 4:
-        return "index.html"
-    return parts[3]
+    return link
 
 
 #Handles pretty much everything
