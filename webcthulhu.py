@@ -1,0 +1,79 @@
+import os,sys,requests,socket,threading,re,codecs
+
+#Checking if values are valid
+def Check(args):
+    if len(args) != 3:
+        sys.exit("Usage: python3 <port> <project_folder>\n\nInside the project_folder the main file should be called\nindex.html or else it wont work.")
+
+    if not os.path.isdir(args[2]):
+        sys.exit("Dir does not exist")
+
+    else: return True
+
+
+error_msg = "<html><body><h1>Not Found</h1></body></html>"
+
+
+#Checking if file exists to respnce with 404 or 200 in the reciever function
+def stat(folder, file):
+    text = (folder + "/" + file)
+    if os.path.exists(text):
+        with open(text, "r") as ftext:
+            html = ftext.read()
+            return html
+    return "False"
+
+
+
+def req_spliter(conn):
+    #Gets file name from GET request
+    link = re.search('(?<=\s)(.*?)(?=\s)', codecs.decode(conn, 'UTF-8'))
+    parse = link.group()
+    parts = parse.split("/")
+    if len(parts) < 4:
+        return "index.html"
+    return parts[3]
+
+
+#Handles preatty much everything
+def handler(conn,addr, folder):
+    print(f"{addr} Connected")
+    connected = True
+    while connected:
+        packet = conn.recv(1024)
+        file = req_spliter(packet)
+        if stat(folder, file) != "False":
+            conn.send(
+                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: text/html; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{stat(folder,file)}".encode())
+        else:
+            conn.send(f"HTTP/1.1 404 Not Found\nServer: Cthulhu/0.1\nContent-Type: text/html; charset=utf-8\n\n{error_msg}".encode())
+
+
+
+
+def start():
+
+    Check(sys.argv)
+
+    HOST = "127.0.0.1"
+    PORT = int(sys.argv[1])
+    folder = (sys.argv[2])
+
+    print(HOST)
+    print(PORT)
+    print(folder)
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((HOST, PORT))
+
+    s.listen()
+    print(f"Listening on {HOST}")
+    while True:
+        conn, addr = s.accept()
+        thread = threading.Thread(target=handler, args=(conn,addr, folder))
+        thread.start()
+        print(f"Active connections {threading.activeCount() - 1}")
+
+
+
+start()
