@@ -47,7 +47,7 @@ def stat(folder, file):
 
 def req_spliter(conn):
     #Gets file name from GET request
-    link = re.search('(?<=\s)(.*?)(?=\s)', codecs.decode(conn, 'UTF-8'))
+    link = re.search('http:.+\.html', codecs.decode(conn, 'UTF-8'))
     parse = link.group()
     parts = parse.split("/")
     if len(parts) < 4:
@@ -61,6 +61,7 @@ def handler(conn,addr, folder):
     connected = True
     while connected:
         packet = conn.recv(1024)
+        print(packet)
         file = req_spliter(packet)
         print(file)
         if stat(folder, file) != "False":
