@@ -1,5 +1,5 @@
 # WebCthulhu
-##Is a webserver where you can host your website (still on beta)
+## Is a webserver where you can host your website (still on beta)
 
 Modules used: `os,sys,socket,threading,re,codecs`
 
