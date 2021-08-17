@@ -35,11 +35,12 @@ error_msg = "<html><body><h1>Not Found</h1></body></html>"
 
 
 #Checking if file exists to responce with 404 or 200 in the hundler function
-def stat(folder, file):
-    text = (folder + "/" + file)
+def stat(folder, name):
+    text = (folder + "/" + name)
     if os.path.exists(text):
         with open(text, "r") as ftext:
             html = ftext.read()
+            ftext.close()
             return html
     return "False"
 
