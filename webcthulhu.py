@@ -34,7 +34,7 @@ def Check(args):
 error_msg = "<html><body><h1>Not Found</h1></body></html>"
 
 
-#Checking if file exists to respnce with 404 or 200 in the reciever function
+#Checking if file exists to responce with 404 or 200 in the reciever function
 def stat(folder, file):
     text = (folder + "/" + file)
     if os.path.exists(text):
@@ -55,18 +55,21 @@ def req_spliter(conn):
     return parts[3]
 
 
-#Handles preatty much everything
+#Handles pretty much everything
 def handler(conn,addr, folder):
     print(f"{addr} Connected")
     connected = True
     while connected:
         packet = conn.recv(1024)
         file = req_spliter(packet)
+        print(file)
         if stat(folder, file) != "False":
             conn.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: text/html; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{stat(folder,file)}".encode())
+            conn.close()
         else:
             conn.send(f"HTTP/1.1 404 Not Found\nServer: Cthulhu/0.1\nContent-Type: text/html; charset=utf-8\n\n{error_msg}".encode())
+            conn.close()
 
 
 
