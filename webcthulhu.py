@@ -34,6 +34,18 @@ def Check(args):
 error_msg = "<html><body><h1>Not Found</h1></body></html>"
 
 
+
+def headcr():
+    if os.path.exists("conf/head.txt"):
+        pass
+
+
+#checks for file extension from get request
+def extcheck():
+
+
+
+
 #Checking if file exists to responce with 404 or 200 in the hundler function
 def stat(folder, name):
     text = (folder + "/" + name)
@@ -46,14 +58,37 @@ def stat(folder, name):
     return "False"
 
 
+def req_css_spliter(conn):
+    link = re.search('/.+\.css', codecs.decode(conn, 'UTF-8'))
+    name = link.group()
+    file = name.split("/")
+    print(file)
+    for i in file:
+        if ".css" in i:
+            return i
 
-def req_spliter(conn):
+
+
+def req_js_spliter(conn):
+    link = re.search('/.+\.js', codecs.decode(conn, 'UTF-8'))
+    name = link.group()
+    file = name.split("/")
+    print(file)
+    for i in file:
+        if ".js" in i:
+            return i
+
+
+
+def req_html_spliter(conn):
     #Gets file name from GET request
     link = re.search('/.+\.html', codecs.decode(conn, 'UTF-8'))
     name = link.group()
     file = name.split("/")
     print(file)
-    return file[3]
+    for i in file:
+        if ".html" in i:
+            return i
 
 
 #Handles pretty much everything
