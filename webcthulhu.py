@@ -42,19 +42,19 @@ def headcr():
 
 
 #checks for file extension from get request
-def extcheck(conn):
-    if rs.req_get_spliter(conn) != "False":
-        print("extcheck runned :" ,rs.req_get_spliter(conn))
-        return rs.req_get_spliter(conn)
+def extcheck(connection):
+    if rs.req_get_spliter(connection) != "False":
+        print("extcheck runned :" ,rs.req_get_spliter(connection))
+        return rs.req_get_spliter(connection)
 
-    else: return "False"
+    return "False"
 
 
 
 #Checking if file exists to responce with 404 or 200 in the hundler function
-def stat(folder, name):
-    text = (folder + "/" + name)
-    print("=> Final path: ",name)
+def stat(folder, file_name):
+    text = (folder + "/" + file_name)
+    print("=> Final path: ",file_name)
     if os.path.exists(text):
         with open(text) as ftext:
             html = ftext.read()
@@ -66,21 +66,21 @@ def stat(folder, name):
 
 
 #Handles pretty much everything
-def handler(conn,addr, folder):
+def handler(connection,addr, folder):
     print(f"=> {addr} Connected")
     connected = True
     while connected:
-        packet = conn.recv(1024)
+        packet = connection.recv(1024)
         print("=> packet = conn.recv() packet is type: ",type(packet))
-        file = extcheck(str(packet))
-        print("=> file = extcheck(packet) file is type: ",type(file))
-        mimetype, _ = mimetypes.guess_type(file)
+        file_name = extcheck(str(packet))
+        print("=> file = extcheck(packet) file is type: ",type(file_name))
+        mimetype, _ = mimetypes.guess_type(file_name)
         print("File extension is: ",mimetype)
 
-        if stat(folder, file) != "False" and extcheck(str(file)) != "False":
+        if stat(folder, file_name) != "False" and extcheck(str(file_name)) != "False":
             print("200 Ok")
             conn.send(
-                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {mimetype}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{stat(folder,file)}".encode())
+                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {mimetype}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{stat(folder,file_name)}".encode())
             conn.close()
         else:
             print("404 Not Found")
@@ -108,8 +108,8 @@ def start():
     s.listen()
     print(f"=> Listening on {HOST}")
     while True:
-        conn, addr = s.accept()
-        thread = threading.Thread(target=handler, args=(conn,addr, folder))
+        connection, addr = s.accept()
+        thread = threading.Thread(target=handler, args=(connection,addr, folder))
         thread.start()
         print(f"=> Active connections {threading.activeCount() - 1}")
 
