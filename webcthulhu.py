@@ -19,7 +19,7 @@ SOFTWARE.
 '''
 
 import os,sys,requests,socket,threading,re,codecs,mimetypes
-import Modules/req_spliter.py as rs
+import req_spliter as rs
 
 #Checking if values are valid
 def Check(args):
@@ -43,16 +43,11 @@ def headcr():
 
 #checks for file extension from get request
 def extcheck(conn):
-    if rs.req_css_spliter(conn) != False:
-        return rs.req_css_spliter(conn)
+    if rs.req_get_spliter(conn) != "False":
+        print("extcheck runned :" ,rs.req_get_spliter(conn))
+        return rs.req_get_spliter(conn)
 
-    if rs.req_js_spliter(conn) != False:
-        return rs.req_js_spliter(conn)
-
-    if rs.req_html_spliter(conn) != False:
-        return rs.req_html_spliter(conn)
-
-    else: return False
+    else: return "False"
 
 
 
@@ -81,7 +76,7 @@ def handler(conn,addr, folder):
         mimetype, _ = mimetypes.guess_type(file)
         print((mimetype, " ") * 10)
 
-        if stat(folder, file) != "False" and extcheck(conn) != False:
+        if stat(folder, file) != "False" and extcheck(conn) != "False":
             conn.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {mimetype}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{stat(folder,file)}".encode())
             conn.close()
