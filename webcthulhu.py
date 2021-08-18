@@ -18,7 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
-import os,sys,requests,socket,threading,re,codecs,mimetypes
+import os,sys,socket,threading,re,codecs,mimetypes
 import req_spliter as rs
 
 #Checking if values are valid
