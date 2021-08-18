@@ -18,7 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
-import os,sys,socket,threading,re,codecs,mimetypes
+import os,sys,requests,socket,threading,re,codecs,mimetypes
 import req_spliter as rs
 
 #Checking if values are valid
@@ -72,12 +72,12 @@ def handler(conn,addr, folder):
     while connected:
         packet = conn.recv(1024)
         print("=> packet = conn.recv() packet is type: ",type(packet))
-        file = extcheck(packet)
+        file = extcheck(str(packet))
         print("=> file = extcheck(packet) file is type: ",type(file))
         mimetype, _ = mimetypes.guess_type(file)
         print("File extension is: ",mimetype)
 
-        if stat(folder, file) != "False" and extcheck(conn) != "False":
+        if stat(folder, file) != "False" and extcheck(str(file)) != "False":
             print("200 Ok")
             conn.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {mimetype}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{stat(folder,file)}".encode())
