@@ -54,33 +54,36 @@ def extcheck(conn):
 #Checking if file exists to responce with 404 or 200 in the hundler function
 def stat(folder, name):
     text = (folder + "/" + name)
-    print((name, " ") * 10)
+    print("=> Final path: ",name)
     if os.path.exists(text):
         with open(text) as ftext:
             html = ftext.read()
             ftext.close()
             return html
+    print("def stat outs False")
     return "False"
 
 
 
 #Handles pretty much everything
 def handler(conn,addr, folder):
-    print(f"{addr} Connected")
+    print(f"=> {addr} Connected")
     connected = True
     while connected:
         packet = conn.recv(1024)
-        print(type(packet))
+        print("=> packet = conn.recv() packet is type: ",type(packet))
         file = extcheck(packet)
-        print(type(file))
+        print("=> file = extcheck(packet) file is type: ",type(file))
         mimetype, _ = mimetypes.guess_type(file)
-        print((mimetype, " ") * 10)
+        print("File extension is: ",mimetype)
 
         if stat(folder, file) != "False" and extcheck(conn) != "False":
+            print("200 Ok")
             conn.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {mimetype}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{stat(folder,file)}".encode())
             conn.close()
         else:
+            print("404 Not Found")
             conn.send(f"HTTP/1.1 404 Not Found\nServer: Cthulhu/0.1\nContent-Type: text/html; charset=utf-8\n\n{error_msg}".encode())
             conn.close()
 
@@ -103,12 +106,12 @@ def start():
     s.bind((HOST, PORT))
 
     s.listen()
-    print(f"Listening on {HOST}")
+    print(f"=> Listening on {HOST}")
     while True:
         conn, addr = s.accept()
         thread = threading.Thread(target=handler, args=(conn,addr, folder))
         thread.start()
-        print(f"Active connections {threading.activeCount() - 1}")
+        print(f"=> Active connections {threading.activeCount() - 1}")
 
 
 
