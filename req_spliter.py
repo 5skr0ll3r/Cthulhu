@@ -2,7 +2,8 @@ import re,codecs
 
 #Returns file name that GET's requested by client
 def req_get_spliter(conn):
-    code = re.search('GET', codecs.decode(conn, 'UTF-8'))
+    print("module req_spliter re_get_spliter(conn) conn type is: ", type(conn))
+    code = re.search('GET', str(conn))#str(codecs.decode(conn, 'UTF-8')))
     req = code.group()
     if "GET" in req:
         print("Is GET request")
