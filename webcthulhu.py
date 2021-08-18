@@ -19,6 +19,7 @@ SOFTWARE.
 '''
 
 import os,sys,requests,socket,threading,re,codecs,mimetypes
+import Modules/req_spliter.py as rs
 
 #Checking if values are valid
 def Check(args):
@@ -41,8 +42,17 @@ def headcr():
 
 
 #checks for file extension from get request
-def extcheck():
+def extcheck(conn):
+    if rs.req_css_spliter(conn) != False:
+        return rs.req_css_spliter(conn)
 
+    if rs.req_js_spliter(conn) != False:
+        return rs.req_js_spliter(conn)
+
+    if rs.req_html_spliter(conn) != False:
+        return rs.req_html_spliter(conn)
+
+    else: return False
 
 
 
@@ -58,38 +68,6 @@ def stat(folder, name):
     return "False"
 
 
-def req_css_spliter(conn):
-    link = re.search('/.+\.css', codecs.decode(conn, 'UTF-8'))
-    name = link.group()
-    file = name.split("/")
-    print(file)
-    for i in file:
-        if ".css" in i:
-            return i
-
-
-
-def req_js_spliter(conn):
-    link = re.search('/.+\.js', codecs.decode(conn, 'UTF-8'))
-    name = link.group()
-    file = name.split("/")
-    print(file)
-    for i in file:
-        if ".js" in i:
-            return i
-
-
-
-def req_html_spliter(conn):
-    #Gets file name from GET request
-    link = re.search('/.+\.html', codecs.decode(conn, 'UTF-8'))
-    name = link.group()
-    file = name.split("/")
-    print(file)
-    for i in file:
-        if ".html" in i:
-            return i
-
 
 #Handles pretty much everything
 def handler(conn,addr, folder):
@@ -98,12 +76,12 @@ def handler(conn,addr, folder):
     while connected:
         packet = conn.recv(1024)
         print(packet)
-        file = req_spliter(packet)
+        file = extcheck(packet)
         print(file)
         mimetype, _ = mimetypes.guess_type(file)
         print((mimetype, " ") * 10)
 
-        if stat(folder, file) != "False":
+        if stat(folder, file) != "False" and extcheck(conn) != False:
             conn.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {mimetype}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{stat(folder,file)}".encode())
             conn.close()
