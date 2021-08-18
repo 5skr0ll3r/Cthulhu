@@ -70,9 +70,9 @@ def handler(conn,addr, folder):
     connected = True
     while connected:
         packet = conn.recv(1024)
-        print(packet)
+        print(type(packet))
         file = extcheck(packet)
-        print(file)
+        print(type(file))
         mimetype, _ = mimetypes.guess_type(file)
         print((mimetype, " ") * 10)
 
