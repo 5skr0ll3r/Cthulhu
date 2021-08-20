@@ -18,6 +18,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
+'''
+MIT License
+Copyright (c) 2021 5skr0ll3r
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+'''
+
 import os,sys,requests,socket,threading,re,codecs,mimetypes
 import req_spliter as rs
 
@@ -68,24 +88,27 @@ def stat(folder, file_name):
 #Handles pretty much everything
 def handler(connection,addr, folder):
     print(f"=> {addr} Connected")
-    connected = True
-    while connected:
+    active = True
+    while active:
         packet = connection.recv(1024)
         print("=> packet = conn.recv() packet is type: ",type(packet))
-        file_name = extcheck(str(packet))
+        deccon = packet.decode('utf-8')
+        print("DECCON =========> ", deccon, "\n\n\n deccon is type: ", type(deccon), "\n\n\n")
+
+        file_name = extcheck(deccon)
         print("=> file = extcheck(packet) file is type: ",type(file_name))
         mimetype, _ = mimetypes.guess_type(file_name)
         print("File extension is: ",mimetype)
 
-        if stat(folder, file_name) != "False" and extcheck(str(file_name)) != "False":
+        if stat(folder, file_name) != "False" and extcheck(file_name) != "False":
             print("200 Ok")
-            conn.send(
+            connection.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {mimetype}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{stat(folder,file_name)}".encode())
-            conn.close()
+            connection.close()
         else:
             print("404 Not Found")
-            conn.send(f"HTTP/1.1 404 Not Found\nServer: Cthulhu/0.1\nContent-Type: text/html; charset=utf-8\n\n{error_msg}".encode())
-            conn.close()
+            connection.send(f"HTTP/1.1 404 Not Found\nServer: Cthulhu/0.1\nContent-Type: text/html; charset=utf-8\n\n{error_msg}".encode())
+            connection.close()
 
 
 
@@ -116,3 +139,4 @@ def start():
 
 
 start()
+
