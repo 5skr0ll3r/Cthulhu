@@ -14,15 +14,17 @@ def req_get_spliter(connection):
     if "GET" in code.split():
         print("Is GET request")
         try:
-            link = re.search('/.+.\.html|/.+.\.css|/.+.\.js', connection).group()#codecs.decode(connection, 'UTF-8'))
+            link = str(re.search('/.+.\.html|/.+.\.css|/.+.\.js', connection).group())#codecs.decode(connection, 'UTF-8'))
         except AttributeError:
-            link = re.search('/.+.\.html|/.+.\.css|/.+.\.js', connection)
+            link = str(re.search('/.+.\.html|/.+.\.css|/.+.\.js', connection))
         file = link.split("/")
         print("File is: ", file)
         for i in file:
             if ".css" in i or ".js" in i or "html" in i:
                 return i
     return False
+
+
 
 
 
