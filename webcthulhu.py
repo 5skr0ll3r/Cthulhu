@@ -41,7 +41,7 @@ def headcr():
         pass
 
 
-#checks for file extension from get request
+#checks for file extension from get request through req_spliter module
 def extcheck(connection):
     print("=> Connection in extcheck equals: ", connection)
     if rs.req_get_spliter(connection) != "False":
@@ -54,15 +54,26 @@ def extcheck(connection):
 
 #Checking if file exists to responce with 404 or 200 in the hundler function
 def stat(folder, file_name):
-    text = (str(folder) + "/" + str(file_name))
-    print("=> Final path: ",file_name)
-    if os.path.exists(text):
-        with open(text) as ftext:
-            html = ftext.read()
-            ftext.close()
-            return html
-    print("=> def stat outs False")
-    return "False"
+    if "css" in file_name:
+        text = (str(folder) + "/css/" + str(file_name))
+        print("=> Final path: ",file_name)
+        if os.path.exists(text):
+            with open(text) as ftext:
+                html = ftext.read()
+                ftext.close()
+                return html
+        print("=> def stat outs False")
+        return "False"
+    else:
+        text = (str(folder) + "/" + str(file_name))
+        print("=> Final path: ",file_name)
+        if os.path.exists(text):
+            with open(text) as ftext:
+                html = ftext.read()
+                ftext.close()
+                return html
+        print("=> def stat outs False")
+        return "False"
 
 
 
