@@ -2,7 +2,8 @@ import re,codecs
 
 #Returns file name that GET's requested by client
 def req_get_spliter(connection):
-    print("module req_spliter re_get_spliter(connection) conn type is: ", type(connection))
+    print("\n\nConnection is equal to: ", connection, "\n\n")
+    print("module req_spliter req_get_spliter(connection) conn type is: ", type(connection))
     try:
         print("Try: ", connection)
         code = str(re.search('GET', connection).group())#codecs.decode(connection, 'UTF-8'))
@@ -22,9 +23,18 @@ def req_get_spliter(connection):
         for i in file:
             if ".css" in i or ".js" in i or "html" in i:
                 return i
-    return False
+    else:
+        print("\n\n\nreq_get_spliter returned false\n\n\n\n")
+        return False
 
-
-
-
-
+def extdetect(file):
+    #if TypeError:
+    #    return "text/plain"
+    if ".css" in file:
+        return "text/css"
+    if ".js" in file:
+        return "text/js"
+    if ".html" in file:
+        return "text/html"
+    else:
+        return "text/plain"  
