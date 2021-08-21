@@ -20,6 +20,7 @@ def req_get_spliter(connection):
             link = str(re.search('/.+.\.html|/.+.\.css|/.+.\.js', connection))
         file = link.split("/")
         print("File is: ", file)
+        file_path = ""
         for i in file:
             if ".css" in i or ".js" in i or "html" in i:
                 return i
