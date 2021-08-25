@@ -1,4 +1,4 @@
-# WebCthulhu
+# Cthulhu
 ## Is a webserver that runs on your system hosting your website (still on beta)
 
 Modules used: `os,sys,socket,threading,re,codecs,mimetypes`
