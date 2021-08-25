@@ -26,12 +26,16 @@ def requirements_check():
 
 def read_file(Project_Path,req_file_path):
 	file_path = Project_Path + req_file_path
-	if os.path.exists(file_path):
-		print(f"File {file_path} found")
-		with open(file_path) as op_file:
+	strip_path = file_path.strip()
+	print(os.path.exists(strip_path))
+	if os.path.exists(strip_path):
+		print(f"File {strip_path} found")
+		with open(strip_path) as op_file:
 			code = op_file.read()
 			op_file.close()
 			return code
+	else:
+		print(f"File {strip_path} not found")
 
 
 
@@ -45,7 +49,7 @@ def connections_handler(connection,addr,Project_Path):
 		if active_connection == False:
 			break
 
-		packet = connection.recv(1024)
+		packet = connection.recv(3000)
 		data = packet.decode('utf-8')
 		print(f"Data received: \n\n{data}\n\n")
 
