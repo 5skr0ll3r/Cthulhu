@@ -10,7 +10,7 @@ methods = ("GET","POST","HEAD","DELETE","CONNECT","PUT","OPTIONS","TRACE","PATCH
 
 #Accepted file extensions
 file_ext = (".html",".css",".js")
-
+imag_ext = (".ico",".jpeg",".png","jpg")
 
 def requirements_check():
 	if len(sys.argv) < 3:
@@ -59,12 +59,12 @@ def connections_handler(connection,addr,Project_Path):
 			if req_file_path != "False":
 				file_extension = rs.determine_file_ext_from_req(req_file_path,file_ext)
 				if file_extension != "False":
-					head_cont_type = rs.header_content_type(file_extension)
+					head_cont_type = rs.header_content_type(file_extension,imag_ext)
 
 					print("Request Accepted")
 					code = read_file(Project_Path,req_file_path)
 
-					connection.send(
+					msg = connection.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {head_cont_type}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{code}".encode())
 					connection.close()
 				else:
