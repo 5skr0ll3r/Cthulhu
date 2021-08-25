@@ -31,9 +31,7 @@ def determine_file_ext_from_req(check_req_file_path, file_ext):
 			if i in check_req_file_path:
 				print(f"Extension {i} accepted")
 				return i
-			else:
-				print(f"requested file extension {check_req_file_path} not accepted")
-				return "False"
+	return "False"
 
 
 def request_is_accepted(check_req_type, check_req_file_path, determine_file_ext_from_req):
