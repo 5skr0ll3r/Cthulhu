@@ -59,16 +59,19 @@ def connections_handler(connection,addr,Project_Path):
 
 					print("Request Accepted")
 					code = read_file(Project_Path,req_file_path)
-					
+
 					connection.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {head_cont_type}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{code}".encode())
 					connection.close()
-#				else:
-#					active_connection == False
-#			else:
-#				active_connection == False
-#		else:
-#			active_connection == False
+				else:
+					connection.send("HTTP/1.1 404 NOT FOUND\nServer: Cthulhu/0.1".encode())
+					connection.close()
+			else:
+				connection.send("HTTP/1.1 404 NOT FOUND\nServer: Cthulhu/0.1".encode())
+				connection.close()
+		else:
+			connection.send("HTTP/1.1 404 NOT FOUND\nServer: Cthulhu/0.1".encode())
+			connection.close()
 
 
 
