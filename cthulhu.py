@@ -10,7 +10,7 @@ methods = ("GET","POST","HEAD","DELETE","CONNECT","PUT","OPTIONS","TRACE","PATCH
 
 #Accepted file extensions
 file_ext = (".html",".css",".js")
-imag_ext = (".ico",".jpeg",".png","jpg")
+imag_ext = (".jpeg",".png","jpg")
 
 def requirements_check():
 	if len(sys.argv) < 3:
@@ -34,7 +34,7 @@ def read_file(Project_Path,req_file_path,file_extension,imag_ext):
 			print(f"File {strip_path} found")
 			with open(strip_path,'rb') as op_file:
 				image = op_file.read()
-				return image
+				return image, 'True'
 		else:
 			print(f"File {strip_path} not found")
 			return 'False'
@@ -78,13 +78,22 @@ def connections_handler(connection,addr,Project_Path,imag_ext,file_ext):
 
 					print("Request Accepted")
 					code = read_file(Project_Path,req_file_path,file_extension,imag_ext)
-					if code == 'False':
+					print(f"code\n\n{code}\n\n")
+					
+					if code[1] == 'True':
+						msg = connection.send(
+                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\r\nServer: Cthulhu/0.1\r\nContent-Type: {head_cont_type};\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n {code[1]}".encode())
+						connection.close()
+
+					elif code == 'False':
 						connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
 						connection.close()
 
-					msg = connection.send(
+					else:
+						msg = connection.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\r\nServer: Cthulhu/0.1\r\nContent-Type: {head_cont_type};\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n{code}".encode())
-					connection.close()
+						connection.close()
+				
 				else:
 					connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
 					connection.close()
