@@ -83,7 +83,7 @@ def connections_handler(connection,addr,Project_Path,imag_ext,file_ext):
 						connection.close()
 
 					msg = connection.send(
-                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\r\nServer: Cthulhu/0.1\r\nContent-Type: {head_cont_type}; charset=utf-8\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n{code}".encode())
+                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\r\nServer: Cthulhu/0.1\r\nContent-Type: {head_cont_type};\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n{code}".encode())
 					connection.close()
 				else:
 					connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
