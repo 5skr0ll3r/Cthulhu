@@ -24,8 +24,10 @@ def requirements_check():
 		pass
 
 
-def read_file(Project_Path,req_file_path,file_ext,imag_ext):
-	if rs.header_content_type(file_ext, imag_ext) in imag_ext:
+def read_file(Project_Path,req_file_path,file_extension,imag_ext):
+	print(f"\n\n\nrs.header_content_type(file_ext, imag_ext) \n\n{rs.header_content_type(file_extension, imag_ext) }\n\n\n")
+	if ('.' + rs.header_content_type(file_extension, imag_ext)) in imag_ext:
+		print("\n\nIs image so read in bytes\n\n")
 		file_path = Project_Path + req_file_path
 		strip_path = file_path.strip()
 		print(os.path.exists(strip_path))
@@ -39,6 +41,7 @@ def read_file(Project_Path,req_file_path,file_ext,imag_ext):
 			return 'False'
 
 	else:
+		print("Not image read as string")
 		file_path = Project_Path + req_file_path
 		strip_path = file_path.strip()
 		print(os.path.exists(strip_path))
@@ -53,7 +56,7 @@ def read_file(Project_Path,req_file_path,file_ext,imag_ext):
 
 
 
-def connections_handler(connection,addr,Project_Path):
+def connections_handler(connection,addr,Project_Path,imag_ext,file_ext):
 	print(f"=> {addr} Connected")
 	active_connection = True
 
@@ -75,7 +78,7 @@ def connections_handler(connection,addr,Project_Path):
 					head_cont_type = rs.header_content_type(file_extension,imag_ext)
 
 					print("Request Accepted")
-					code = read_file(Project_Path,req_file_path,file_ext,imag_ext)
+					code = read_file(Project_Path,req_file_path,file_extension,imag_ext)
 					if code == 'False':
 						connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
 						connection.close()
@@ -117,7 +120,7 @@ def start():
 #Will create a thread for every accepted connection so the server can be non-block
 	while True:
 		connection, addr = s.accept()
-		thread = threading.Thread(target=connections_handler, args=(connection,addr, Project_Path))
+		thread = threading.Thread(target=connections_handler, args=(connection,addr, Project_Path,imag_ext,file_ext))
 		thread.start()
 		print(f"=> Active connections {threading.activeCount() - 1}")
 
