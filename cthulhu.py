@@ -32,9 +32,8 @@ def read_file(Project_Path,req_file_path,file_ext,imag_ext):
 		if os.path.exists(strip_path):
 			print(f"File {strip_path} found")
 			with open(strip_path,'rb') as op_file:
-				code = op_file.read()
-				op_file.close()
-				return code
+				image = op_file.read()
+				return image
 		else:
 			print(f"File {strip_path} not found")
 			return 'False'
@@ -47,7 +46,6 @@ def read_file(Project_Path,req_file_path,file_ext,imag_ext):
 			print(f"File {strip_path} found")
 			with open(strip_path) as op_file:
 				code = op_file.read()
-				op_file.close()
 				return code
 		else:
 			print(f"File {strip_path} not found")
