@@ -25,9 +25,9 @@ def check_req_file_path(request, check_req_type):
 
 
 #Detects if requested file extension is accepted and returns it if accepted
-def determine_file_ext_from_req(check_req_file_path, file_ext):
+def determine_file_ext_from_req(check_req_file_path, file_ext, imag_ext):
 	if check_req_file_path != "False":
-		for i in file_ext:
+		for i in file_ext or i in imag_ext:
 			if i in check_req_file_path:
 				print(f"Extension {i} accepted")
 				return i
