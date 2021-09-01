@@ -46,15 +46,15 @@ def request_is_accepted(check_req_type, check_req_file_path, determine_file_ext_
 		return False
 
 
-def header_content_type(file_ext, imag_ext):
-	if file_ext == ".html":
+def header_content_type(determine_file_ext_from_req, imag_ext):
+	if determine_file_ext_from_req == ".html":
 		return "text/html"
-	if file_ext == ".css":
+	if determine_file_ext_from_req == ".css":
 		return "text/css"
-	if file_ext == ".js":
+	if determine_file_ext_from_req == ".js":
 		return "text/js"
-	if file_ext in imag_ext:
-		im_type = file_ext.split(".")
+	if determine_file_ext_from_req in imag_ext:
+		im_type = determine_file_ext_from_req.split(".")
 		return im_type[1]
 	else:
 		return "text/plain"
