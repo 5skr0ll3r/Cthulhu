@@ -25,8 +25,7 @@ def requirements_check():
 
 
 def read_file(Project_Path,req_file_path,file_extension,imag_ext):
-	print(f"\n\n\nrs.header_content_type(file_ext, imag_ext) \n\n{rs.header_content_type(file_extension, imag_ext) }\n\n\n")
-	if ('.' + rs.header_content_type(file_extension, imag_ext)) in imag_ext:
+	if  file_extension in imag_ext:
 		print("\n\nIs image so read in bytes\n\n")
 		file_path = Project_Path + req_file_path
 		strip_path = file_path.strip()
