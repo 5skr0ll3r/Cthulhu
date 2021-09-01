@@ -57,7 +57,7 @@ def connections_handler(connection,addr,Project_Path):
 		if req_type != "False":
 			req_file_path = rs.check_req_file_path(data,req_type)
 			if req_file_path != "False":
-				file_extension = rs.determine_file_ext_from_req(req_file_path,file_ext)
+				file_extension = rs.determine_file_ext_from_req(req_file_path,file_ext, imag_ext)
 				if file_extension != "False":
 					head_cont_type = rs.header_content_type(file_extension,imag_ext)
 
@@ -65,16 +65,16 @@ def connections_handler(connection,addr,Project_Path):
 					code = read_file(Project_Path,req_file_path)
 
 					msg = connection.send(
-                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\nServer: Cthulhu/0.1\nContent-Type: {head_cont_type}; charset=utf-8\nKeep-Alive: timeout=5, max=1000\n\n{code}".encode())
+                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\r\nServer: Cthulhu/0.1\r\nContent-Type: {head_cont_type}; charset=utf-8\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n{code}".encode())
 					connection.close()
 				else:
-					connection.send("HTTP/1.1 404 NOT FOUND\nServer: Cthulhu/0.1".encode())
+					connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
 					connection.close()
 			else:
-				connection.send("HTTP/1.1 404 NOT FOUND\nServer: Cthulhu/0.1".encode())
+				connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
 				connection.close()
 		else:
-			connection.send("HTTP/1.1 404 NOT FOUND\nServer: Cthulhu/0.1".encode())
+			connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
 			connection.close()
 
 
