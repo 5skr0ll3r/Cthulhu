@@ -24,19 +24,34 @@ def requirements_check():
 		pass
 
 
-def read_file(Project_Path,req_file_path):
-	file_path = Project_Path + req_file_path
-	strip_path = file_path.strip()
-	print(os.path.exists(strip_path))
-	if os.path.exists(strip_path):
-		print(f"File {strip_path} found")
-		with open(strip_path) as op_file:
-			code = op_file.read()
-			op_file.close()
-			return code
-	else:
-		print(f"File {strip_path} not found")
+def read_file(Project_Path,req_file_path,file_ext,imag_ext):
+	if rs.header_content_type(file_ext, imag_ext) in imag_ext:
+		file_path = Project_Path + req_file_path
+		strip_path = file_path.strip()
+		print(os.path.exists(strip_path))
+		if os.path.exists(strip_path):
+			print(f"File {strip_path} found")
+			with open(strip_path,'rb') as op_file:
+				code = op_file.read()
+				op_file.close()
+				return code
+		else:
+			print(f"File {strip_path} not found")
+			return 'False'
 
+	else:
+		file_path = Project_Path + req_file_path
+		strip_path = file_path.strip()
+		print(os.path.exists(strip_path))
+		if os.path.exists(strip_path):
+			print(f"File {strip_path} found")
+			with open(strip_path) as op_file:
+				code = op_file.read()
+				op_file.close()
+				return code
+		else:
+			print(f"File {strip_path} not found")
+			return 'False'
 
 
 
@@ -62,7 +77,10 @@ def connections_handler(connection,addr,Project_Path):
 					head_cont_type = rs.header_content_type(file_extension,imag_ext)
 
 					print("Request Accepted")
-					code = read_file(Project_Path,req_file_path)
+					code = read_file(Project_Path,req_file_path,file_ext,imag_ext)
+					if code == 'False':
+						connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
+						connection.close()
 
 					msg = connection.send(
                 f"HTTP/1.1 200 OK\nConnection: Keep-Alive\r\nServer: Cthulhu/0.1\r\nContent-Type: {head_cont_type}; charset=utf-8\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n{code}".encode())
