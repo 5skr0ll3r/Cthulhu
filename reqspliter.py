@@ -32,10 +32,13 @@ def determine_file_ext_from_req(check_req_file_path, file_ext, imag_ext):
 				print(f"Extension {i} accepted")
 				return i
 			else:
-				for x in imag_ext:
-					if x in check_req_file_path:
-						print(f"Extension {x} accepted")
-						return x
+				break
+		for x in imag_ext:
+			if x in check_req_file_path:
+				print(f"Extension {x} accepted")
+				return x
+			else:
+				break
 	return "False"
 
 
