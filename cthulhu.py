@@ -82,7 +82,7 @@ def connections_handler(connection,addr,Project_Path,imag_ext,file_ext):
 					
 					if code[1] == 'True':
 						msg = connection.send(
-                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\r\nServer: Cthulhu/0.1\r\nContent-Type: {head_cont_type};\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n {code[1]}".encode())
+                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\r\nServer: Cthulhu/0.1\r\nContent-Type: {head_cont_type};\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n {code[0].strip()}".encode())
 						connection.close()
 
 					elif code == 'False':
