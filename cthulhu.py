@@ -1,136 +1,88 @@
-import socket,threading,re,sys,os
-import reqspliter as rs
+import argparse, os, sys, threading
+from classes.frapitska import Sock
+from classes.frapitska import Headers
+from classes.reqspliter import ReqSpliter
 
 
-hel = ("h", "help", "H", "HELP")
-
-
-#Accepted methods by server
+#Accepted methods go here
 methods = ("GET","POST","HEAD","DELETE","CONNECT","PUT","OPTIONS","TRACE","PATCH")
 
-#Accepted file extensions
-file_ext = (".html",".css",".js")
-imag_ext = (".jpeg",".png","jpg")
+#Accepted file extensions go here
+fileExt = ("html","css","js")
+imageExt = ("jpeg","png","jpg","ico")
 
-def requirements_check():
-	if len(sys.argv) < 3:
-		if len(sys.argv) == 1:
-			sys.exit(f"Usage: {sys.argv[0]} <Port> <Project_Path>")
-		if sys.argv[1] in hel:
-			sys.exit(f"Usage: {sys.argv[0]} <Port> <Project_Path>\n\n<Port>: The port you want the server to communicate through\n<Project_Path>: The path to the directory index file is in\nExample: python3 {sys.argv[0]} 5444 www")
-		else:
-			sys.exit("Uknown Error Occured")
+
+reqSpliter = ReqSpliter(methods, fileExt, imageExt)
+
+
+
+def args():
+	ap = argparse.ArgumentParser(description="Local Site Hosting software (Public too if port forward)\n-p is for the port you wish to use to run the site to\n-s is for the psites folder path")
+	ap.add_argument("-p", "--port", required=True, help="Port to Run on")
+	ap.add_argument("-s", "--site",required=True, help="Path for Project")
+	return vars(ap.parse_args())
+
+
+def readFileContent(sitePath, reqFile, extension, fileExt, imageExt):
+	if extension in imageExt:
+		path = (sitePath + reqFile).strip()
+		if(os.path.exists(path)):
+			with open(path, "rb") as opFile:
+				return opFile.read()
+		else: 
+			return False
 	else:
-		pass
+		path = (sitePath + reqFile).strip()
+		if(os.path.exists(path)):
+			with open((sitePath + reqFile).strip(), "r") as opFile:
+				return opFile.read()
+		else: 
+			return False
 
 
-def read_file(Project_Path,req_file_path,file_extension,imag_ext):
-	if  file_extension in imag_ext:
-		print("\n\nIs image so read in bytes\n\n")
-		file_path = Project_Path + req_file_path
-		strip_path = file_path.strip()
-		print(os.path.exists(strip_path))
-		if os.path.exists(strip_path):
-			print(f"File {strip_path} found")
-			with open(strip_path,'rb') as op_file:
-				image = op_file.read()
-				return image, 'True'
-		else:
-			print(f"File {strip_path} not found")
-			return 'False'
+def handler(sock, sitePath):
 
-	else:
-		print("Not image read as string")
-		file_path = Project_Path + req_file_path
-		strip_path = file_path.strip()
-		print(os.path.exists(strip_path))
-		if os.path.exists(strip_path):
-			print(f"File {strip_path} found")
-			with open(strip_path) as op_file:
-				code = op_file.read()
-				return code
-		else:
-			print(f"File {strip_path} not found")
-			return 'False'
-
-
-
-def connections_handler(connection,addr,Project_Path,imag_ext,file_ext):
-	print(f"=> {addr} Connected")
-	active_connection = True
-
-	while active_connection:
-		
-		if active_connection == False:
-			break
-
-		packet = connection.recv(3000)
-		data = packet.decode('utf-8')
-		print(f"Data received: \n\n{data}\n\n")
-
-		req_type = rs.check_req_type(data,methods)
-		if req_type != "False":
-			req_file_path = rs.check_req_file_path(data,req_type)
-			if req_file_path != "False":
-				file_extension = rs.determine_file_ext_from_req(req_file_path,file_ext, imag_ext)
-				if file_extension != "False":
-					head_cont_type = rs.header_content_type(file_extension,imag_ext)
-
-					print("Request Accepted")
-					code = read_file(Project_Path,req_file_path,file_extension,imag_ext)
-					print(f"code\n\n{code}\n\n")
-					
-					if code[1] == 'True':
-						msg = connection.send(
-                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\r\nServer: Cthulhu/0.1\r\nContent-Type: {head_cont_type};\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n {code[0].strip()}".encode())
-						connection.close()
-
-					elif code == 'False':
-						connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
-						connection.close()
-
-					else:
-						msg = connection.send(
-                f"HTTP/1.1 200 OK\nConnection: Keep-Alive\r\nServer: Cthulhu/0.1\r\nContent-Type: {head_cont_type};\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n{code}".encode())
-						connection.close()
-				
-				else:
-					connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
-					connection.close()
-			else:
-				connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
-				connection.close()
-		else:
-			connection.send("HTTP/1.1 404 NOT FOUND\r\nServer: Cthulhu/0.1".encode())
-			connection.close()
-
-
-
-
-
-
-#Main function
-def start():
-
-	requirements_check()
-
-	HOST = socket.gethostbyname(socket.gethostname())
-	PORT = int(sys.argv[1])
-	Project_Path = sys.argv[2]
-
-	#Create socket object bind with given vars and start listening
-	s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-	s.bind((HOST,PORT))
-	s.listen()
-
-	print(f"{HOST} Started listening on port: {PORT}")
-
-#Will create a thread for every accepted connection so the server can be non-block
 	while True:
-		connection, addr = s.accept()
-		thread = threading.Thread(target=connections_handler, args=(connection,addr, Project_Path,imag_ext,file_ext))
+		req = sock.receive().decode('utf-8')
+
+		reqType = reqSpliter.checkReqType(req)
+		reqFilePath = reqSpliter.checkReqFilePath(req, reqType)
+		reqFileExt = reqSpliter.determineFileExtFromReq(reqFilePath)
+		print("\n\nReqFileExt : " + reqFileExt)
+		print("\n\nReqFilePath : " + reqFilePath + "\n\n")
+		conType = reqSpliter.headerContentType(reqFileExt)
+
+		data = readFileContent(sitePath,reqFilePath, reqFileExt, reqSpliter.fileExt, reqSpliter.imageExt)
+
+		headers = Headers(conType, data)
+		header = headers.header(reqSpliter.requestIsAccepted(reqType, reqFilePath, reqFileExt),data)
+
+		sock.respond(header)
+
+
+def main():
+
+	argv = args()
+
+	#checking if path exists and if yes storing it in sitePath with the walrus operator
+	if(not(os.path.exists(argv["site"]) and (sitePath := argv["site"]))):
+		sys.exit("Path is not valid")
+
+	sock = Sock(argv["port"])
+	sock.run()
+
+
+
+	while True:
+		sock.accept()
+		thread = threading.Thread(target=handler, args=(sock, sitePath))
 		thread.start()
-		print(f"=> Active connections {threading.activeCount() - 1}")
 
 
-start()
+
+if __name__ == "__main__":
+	main()
+
+
+
+
