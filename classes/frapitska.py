@@ -1,4 +1,4 @@
-import socket
+import socket, asyncio
 
 
 class Sock:
@@ -16,18 +16,17 @@ class Sock:
 		self.socket.bind((self.host, self.port))
 		self.socket.listen()
 
-
-	def accept(self):
+	async def accept(self):
 		self.connection, self.address = self.socket.accept()
 
-	def receive(self):
-		self.dataReceived = self.connection.recv(3000)
+	async def receive(self):
+		self.dataReceived = self.connection.recv(3000).decode('utf-8')
+		print(f"\nData received:\n{self.dataReceived}\n\n")
 		return self.dataReceived
 
-	def respond(self, data):
+	async def respond(self, data):
 		self.connection.send(data.encode())
 		self.connection.close()
-
 
 	def close(self):
 		self.socket = None
