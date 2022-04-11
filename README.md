@@ -3,7 +3,7 @@
 
 Modules used: `os,sys,socket,threading,re`
 
-Usage: `python3 cthulhu.py <port_to_run_on> <project_directory>`
+Usage: `python3 cthulhu.py -p <port_to_run_on> -s <project_directory>`
 
 Example url: `http://<ip>:<port>/index.html`
 
