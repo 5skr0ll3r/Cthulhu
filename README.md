@@ -1,7 +1,7 @@
 # Cthulhu
 ## Is a webserver that runs on your system hosting your website (still on V0.3)
 
-Modules used: `os,sys,socket,threading,re`
+Modules used: `argparse, os, sys, asyncio, re, socket`
 
 Usage: `python3 cthulhu.py -p <port_to_run_on> -s <project_directory>`
 
