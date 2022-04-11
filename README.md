@@ -1,5 +1,5 @@
 # Cthulhu
-## Is a webserver that runs on your system hosting your website (still on V0.1)
+## Is a webserver that runs on your system hosting your website (still on V0.3)
 
 Modules used: `os,sys,socket,threading,re`
 
