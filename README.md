@@ -7,4 +7,4 @@ Usage: `python3 cthulhu.py -p <port_to_run_on> -s <project_directory>`
 
 Example url: `http://<ip>:<port>/index.html`
 
-Install with git: `git clone https://github.com/5skr0ll3r/Cthulhu`
+Clone with git: `git clone https://github.com/5skr0ll3r/Cthulhu`
