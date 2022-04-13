@@ -21,8 +21,8 @@ def args():
 	return vars(ap.parse_args())
 
 
-def readFileContent(sitePath, reqFile, extension, fileExt, imageExt):
-	path = (sitePath + reqFile).strip()
+def readFileContent(sitePath, reqFilePath):
+	path = (sitePath + reqFilePath).strip()
 	if(os.path.isfile(path)):
 		with open(path, "rb") as opFile:
 			return opFile.read()
@@ -43,7 +43,7 @@ async def handler(sock, sitePath):
 
 	print(f"\n\nContent-Type: {conType}\n\n")
 
-	data = readFileContent(sitePath,reqFilePath, reqFileExt, reqSpliter.fileExt, reqSpliter.imageExt)
+	data = readFileContent(sitePath,reqFilePath)
 
 	print(f"\nData to Send\n{data}\n\n")
 
