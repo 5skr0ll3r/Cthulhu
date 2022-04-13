@@ -4,7 +4,7 @@ import socket, asyncio
 class Sock:
 
 	def __init__(self, _port):
-		self.host = "127.0.0.1"#socket.gethostbyname(socket.gethostname())
+		self.host = '127.0.0.1'#socket.gethostbyname(socket.gethostname()) 
 		self.port = int(_port)
 		self.connection = None
 		self.address = None
@@ -25,7 +25,7 @@ class Sock:
 		return self.dataReceived
 
 	async def respond(self, data):
-		self.connection.send(data.encode())
+		self.connection.send(data)
 		self.connection.close()
 
 	def close(self):
@@ -45,14 +45,14 @@ class Headers:
 		self.internalError = "HTTP/1.1 500 INTERNAL SERVER ERROR"
 		self.contentType = f"Content-Type: {_contentType}"
 		self.length = f"Content-Length: {len(self.data)}"
-		self.server = "Server: Cthulhu/0.1"
+		self.server = "Server: Cthulhu/0.3"
 
 	def header(self, accepted, exists):
 		if(accepted and exists):
-			return self.okay + self.next + self.contentType + self.next + self.length + self.next + self.server + self.end + self.data
-		elif(accepted and not exists):
-			return self.notFound + self.next + self.contentType + self.next + self.length + self.next + self.server + self.end
+			return bytes(self.okay + self.next + self.contentType + self.next + self.length + self.next + self.server + self.end, 'utf-8') + self.data
+		elif (accepted and not exists):
+			return bytes(self.notFound + self.next + self.contentType + self.next + self.server + self.end, 'utf-8')
 		else:
-			return self.internalError + self.end
+			return bytes(self.internalError + self.end, 'utf-8')
 
 
