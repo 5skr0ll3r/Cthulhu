@@ -24,20 +24,12 @@ def args():
 
 
 def readFileContent(sitePath, reqFile, extension, fileExt, imageExt):
-	if extension in imageExt:
-		path = (sitePath + reqFile).strip()
-		if(os.path.isfile(path)):
-			with open(path, "rb") as opFile:
-				return opFile.read()
-		else: 
-			return False
-	else:
-		path = (sitePath + reqFile).strip()
-		if(os.path.isfile(path)):
-			with open((sitePath + reqFile).strip(), "rb") as opFile:
-				return opFile.read()
-		else: 
-			return False
+	path = (sitePath + reqFile).strip()
+	if(os.path.isfile(path)):
+		with open(path, "rb") as opFile:
+			return opFile.read()
+	else: 
+		return False
 
 
 async def handler(sock, sitePath):
