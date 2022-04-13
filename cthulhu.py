@@ -2,7 +2,6 @@ import argparse, os, sys, asyncio, base64
 from classes.frapitska import Sock
 from classes.frapitska import Headers
 from classes.reqspliter import ReqSpliter
-#from classes.filesmanager import File
 
 
 #Accepted methods go here
@@ -12,7 +11,6 @@ methods = ("GET","POST","HEAD","DELETE","CONNECT","PUT","OPTIONS","TRACE","PATCH
 fileExt = ("html","css","js")
 imageExt = ("jpeg","png","jpg","ico")
 
-#fileReader = File(fileExt, imageExt)
 reqSpliter = ReqSpliter(methods, fileExt, imageExt)
 
 
@@ -34,7 +32,6 @@ def readFileContent(sitePath, reqFile, extension, fileExt, imageExt):
 
 async def handler(sock, sitePath):
 
-	#while True:
 	req = await sock.receive()
 
 	reqType = reqSpliter.checkReqType(req)
@@ -45,8 +42,6 @@ async def handler(sock, sitePath):
 	conType = reqSpliter.headerContentType(reqFileExt)
 
 	print(f"\n\nContent-Type: {conType}\n\n")
-
-	#data = fileReader.read(sitePath, reqFilePath, fileReader.isImage(reqSpliter.fileExt))
 
 	data = readFileContent(sitePath,reqFilePath, reqFileExt, reqSpliter.fileExt, reqSpliter.imageExt)
 
