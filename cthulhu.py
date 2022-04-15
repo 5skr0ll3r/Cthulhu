@@ -5,7 +5,7 @@ from classes.reqspliter import ReqSpliter
 
 
 #Accepted methods go here
-methods = ("GET","POST","HEAD","DELETE","CONNECT","PUT","OPTIONS","TRACE","PATCH")
+methods = ("GET")
 
 #Accepted file extensions go here
 fileExt = ("html","css","js")
