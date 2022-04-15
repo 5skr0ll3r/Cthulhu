@@ -1,5 +1,5 @@
 # Cthulhu
-## Is a webserver that runs on your system hosting your website (still on V0.3)
+## Is a webserver that runs on your system hosting your website (Only For GET Requests)
 
 Modules used: `argparse, os, sys, asyncio, re, socket`
 
