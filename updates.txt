@@ -4,3 +4,5 @@ Version 0.1: GET request works
 Version 0.3 Classified most of the code,
             rewritten most of the code, images work
 	    added async functionallity
+	  
+Version Finale
