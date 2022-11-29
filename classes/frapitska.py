@@ -25,7 +25,7 @@ class Sock:
 		return self.dataReceived
 
 	async def respond(self, data):
-		self.connection.send(data)
+		self.connection.sendall(data)
 		self.connection.close()
 
 	def close(self):
@@ -35,6 +35,7 @@ class Sock:
 
 class Headers:
 	def __init__(self, _contentType, _data):
+		self.ct = _contentType
 		self.data = _data
 		if(not _data):
 			self.data = "No Content"
@@ -43,13 +44,15 @@ class Headers:
 		self.okay = "HTTP/1.1 200 OK"
 		self.notFound = "HTTP/1.1 404 NOT FOUND"
 		self.internalError = "HTTP/1.1 500 INTERNAL SERVER ERROR"
-		self.contentType = f"Content-Type: {_contentType}"
+		self.contentType = f"Content-Type: {self.ct}"
 		self.length = f"Content-Length: {len(self.data)}"
-		self.server = "Server: Cthulhu/0.3"
+		self.server = "Server: Cthulhu/0.5"
 
 	def header(self, accepted, exists):
-		if(accepted and exists):
-			return bytes(self.okay + self.next + self.contentType + self.next + self.length + self.next + self.server + self.end, 'utf-8') + self.data
+		if(accepted and exists and "image" in self.ct):
+			return bytes(self.okay + self.next + self.contentType + self.next + self.length + self.next + self.server + self.end,'utf-8') + self.data
+		elif(accepted and exists):
+			return bytes(self.okay + self.next + self.contentType + self.next + self.length + self.next + self.server + self.end + self.data, 'utf-8')
 		elif (accepted and not exists):
 			return bytes(self.notFound + self.next + self.contentType + self.next + self.server + self.end, 'utf-8')
 		else:

@@ -3,6 +3,6 @@ Version 0.1: GET request works
 
 Version 0.3 Classified most of the code,
             rewritten most of the code, images work
-	    added async functionallity
-	  
-Version Finale
+	    added async functionallity (or so i thought)
+
+Version 0.4,0.5,0.6 Refactoring code
