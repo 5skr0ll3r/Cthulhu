@@ -166,10 +166,10 @@ and stored in the 'cache' saving time
 
 __Tree()__ is a 3 layer tree where the structure lookes like this
 ```
-						__ /css/master.css
-					   |
-		 __ index.html-
-		 |			   |__ /js/master.js
+				__ /css/master.css
+				|
+		 __ index.html---		
+		 |		|__ /js/master.js
 		 |
 	root--- about.html -- /css/master2.css
 		 |
