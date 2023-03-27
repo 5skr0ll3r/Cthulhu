@@ -26,7 +26,7 @@ class App:
 
 
 	#Get Request implimentation
-	async def get(self, name, path, inFunc = None):
+	async def get(self, path, inFunc = None):
 
 		while True:
 			if(self.request == None):
@@ -34,14 +34,15 @@ class App:
 				self.request = await self.sock.receive()
 			
 
+			headers = Headers()
 			#request = await self.sock.receive()
 			#self.request = request
 			
-			isAccepted, splitedZero, requestType, fileRequested, fileExtension, conType = self.reqSpliter.dataPrep(self.request) 
+			isAccepted, requestDict, requestType, fileRequested, fileExtension, conType = self.reqSpliter.dataPrep(self.request) 
 
-			print(f"\n\nname: {name}\npath: {path}\nisAccepted: {isAccepted}\nsplitedZero: {splitedZero}\nrequestType:{requestType}\nfileRequested: {fileRequested}\nfileExtension: {fileExtension}\nConType: {conType}\n\n")
+			print(f"\n\npath: {path}\nisAccepted: {isAccepted}\nsplitedZero: {requestDict}\nrequestType:{requestType}\nfileRequested: {fileRequested}\nfileExtension: {fileExtension}\nConType: {conType}\n\n")
 
-			if requestType == "GET" and name in fileRequested:
+			if requestType == "GET" and isAccepted:
 				if not inFunc == None: return inFunc(self.request)
 				
 
@@ -52,28 +53,29 @@ class App:
 				##This should start on initialization
 				## Appends The tree for each file
 				self.cache.insertArray(fileRequested, parsedHS)
+				self.cache.printTree()
 
-				headers = Headers(conType, data)
-				header = headers.header(isAccepted,data)
+				#headers = Headers(conType, data)
+				header = headers.header(isAccepted,data,data,conType)
 				print("="*30+f"\n\n{data}\n\n")
 				await self.sock.respond(header)
 				self.request = None
 
-				if not self.cache.isEmpty():
-					rest = self.cache.getValues(fileRequested)
-					await self.sock.accept()
-					self.request = await self.sock.receive()
+#				if not self.cache.isEmpty():
+#					rest = self.cache.getValues(fileRequested)
+#					await self.sock.accept()
+#					self.request = await self.sock.receive()#
 
-					isAccepted, splitedZero, requestType, fileRequested, fileExtension, conType = self.reqSpliter.dataPrep(self.request)
+#					isAccepted, splitedZero, requestType, fileRequested, fileExtension, conType = self.reqSpliter.dataPrep(self.request)#
 
-					while True:
-						if rest and fileRequested in rest:
-							data = self.fileManager.readFileContent(path, conType)
-							headers = Headers(conType, data)
-							header = headers.header(isAccepted,data)
-							print("="*30+f"\n\n{data}\n\n")
-							await self.sock.respond(header)
-						else: break
+#					while True:
+#						if rest and fileRequested in rest:
+#							data = self.fileManager.readFileContent(path, conType)
+#							headers = Headers(conType, data)
+#							header = headers.header(isAccepted,data)
+#							print("="*30+f"\n\n{data}\n\n")
+#							await self.sock.respond(header)
+#						else: break
 									
 
 

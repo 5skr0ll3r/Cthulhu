@@ -78,20 +78,20 @@ class Tree:
 #def main():
 #
 
-	t = Tree('files', [
-			Tree('index',[
-				Tree('index.js'),
-                Tree('index.css')
-				]),
-            Tree('about',[
-            	Tree('about.js'),
-                Tree('about.css')
-                ]),
-            Tree('login', [
-            	Tree('log.js'),
-                Tree('log.css')
-                ])
-            ])
+#	t = Tree('files', [
+#			Tree('index',[
+#				Tree('index.js'),
+#                Tree('index.css')
+#				]),
+#            Tree('about',[
+#            	Tree('about.js'),
+#                Tree('about.css')
+#                ]),
+#            Tree('login', [
+#            	Tree('log.js'),
+#                Tree('log.css')
+#                ])
+#            ])
 #
 #
 

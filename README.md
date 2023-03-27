@@ -118,17 +118,11 @@ __dataPrep()__ is the sum of all the available functionality of __ReqSpliter__ w
 * dataPrep(request)
 
 __spliter()__ Splits the request Headers in every new line and returns a __List of Strings__ so i can parse them easier
-
 __checkReqType()__ Checks the type of the request (GET,POST,PUT,etc..) and returns True if the method is accepted else False
-
 __determineFileExtFromReq()__ Determines the requested File's extension to see if it is allowed and to help determine the correct __Content-Type__ later returns a __String__
-
 __checkReqFilePath()__ Determines the path for the file requested and returns a __String__
-
 __headerContentType()__ Uses the extracted file extension to first see if it is an image or text and then return the correct __Content-Type__
-
 __requestIsAccepted()__ Checks the return of __checkReqType__, __checkReqFilePath__ and __determineFileExtFromReq__ and returns a bool
-
 __dataPrep()__ Returns a everything said above
 
 Some regex is also compiled in the initialization in order to parse the requests faster.
@@ -151,7 +145,6 @@ If __None__, __FileManager__ is used to read and parse the file requested
 * parserHTML()
 
 __readFileContent(path)__ Reads the file depending of the type (image/txt) either reads as bytes or just a simple read and returns the content
-
 __parserHTML(fileContent)__ Reads the content and using the precompiled regex shown bellow retrieves the contents of src and href attributes and returns a list  
 
 ```python
@@ -173,10 +166,10 @@ and stored in the 'cache' saving time
 
 __Tree()__ is a 3 layer tree where the structure lookes like this
 ```
-				__ /css/master.css
-				|
-		 __ index.html---		
-		 |		|__ /js/master.js
+						__ /css/master.css
+					   |
+		 __ index.html-
+		 |			   |__ /js/master.js
 		 |
 	root--- about.html -- /css/master2.css
 		 |
@@ -195,17 +188,11 @@ on initialization we set the name of the tree default is __root__
 * insertArray(fileRequested, array)
 
 __exists()__ Checks if file is already register and returns a bool
-
 __isEmpty()__ Checks if the Tree is empty and returns a bool
-
 __addChild()__ First checks if the node you try to append to the tree has a Tree like structure and either appends or returns False
-
 __getIndex()__ Finds the index of the main/node (html) file by name and returns an int else False
-
 __getValues()__ Returns a list of the files under the main/node (html) file
-
 __printTree()__ Prints the whole tree for debugging
-
 __insertArray()__ Either Adds a whole Node to the Tree or if the main file already exists just appends the subfiles and returns bool
 
 Tree creation sample
@@ -237,13 +224,9 @@ __Sock__ is for handling the connections
 * close()
 
 __run()__ Sets up the socket.socket object binds the host and the port and starts listening
-
 __accept()__ Accepts incoming connections
-
 __receive()__ Receives and returns the data as a String
-
 __respond()__ Sends the data 
-
 __close()__ Emptys the self.socket object
 
 The __Headers__ is used to format the data that will be sent to the client containing only

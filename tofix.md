@@ -1,5 +1,5 @@
 Chtulhu.py: When pasing to header function accesable from Header object i pass data first to varible self.data and then to the function to see if data exists so the request can procced
-fix:pass directly to the header() method so i don't have to create every time an instance of the Header object 
+fix:pass directly to the header() method so i don't have to create every time an instance of the Header object (make static)
 
 
 ReqSpliter: when reterning path i regex out the "/" so i manually put it for the file manager to work
@@ -9,8 +9,9 @@ fix: automate the process with a simple check
 Cthulhu: get: move almost everything into a controller for cleaner code
 
 
-Tree: insertArray: check if item already exists in existant tree
+Tree: insertArray: check if item already exists in tree
 
+checkReqType() in reqspliter.py should not return a boolean if reqType not found
 
 Every sock request from each client should be stored in an array
 cause the asyncio interferes with the processing of each
@@ -31,6 +32,7 @@ in order to achieve a non block experience
 
 reqSpliter: prep2: remake regex
 
+Convert request headers to dictionary for easy access
 
 ReqSpliter: method: dataPrep() the splitedList online returns the first element of the actuall list
 Fix: change name

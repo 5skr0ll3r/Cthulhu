@@ -28,25 +28,9 @@ class FileManager:
 			print("file does not exist")
 			return False
 
-#	def parserHTML(self, fileContent, tp):
-#		src = self.srcFind.findall(fileContent)
-#		href = self.hrefFind.findall(fileContent)
-#		if len(src) != 0:
-#			for i in range(len(src)):
-#				src[i] = self.li.findall(src[i])[0]
-#				src[i] = re.sub('[\"|\']', '', str(src[i]))
-#		if len(href) != 0:
-#			for x in range(len(href)):
-#				href[x] = self.li.findall(href[x])[0]
-#				href[x] = re.sub('[\"|\']', '', str(href[x]))
-#				if not self.FileName.match(href[x]):
-#					href.pop(x)
-#		return src, href
-	
-
 
 	def parserHTML(self, fileContent, tp=None):
-		if not "image" in tp:
+		if not "image" in tp and fileContent:
 			src = self.srcFind.findall(fileContent)
 			href = self.hrefFind.findall(fileContent)
 			if len(src) != 0:

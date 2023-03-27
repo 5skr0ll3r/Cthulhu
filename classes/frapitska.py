@@ -4,7 +4,7 @@ import socket, asyncio
 class Sock:
 
 	def __init__(self, _port):
-		self.host = '127.0.0.1'#socket.gethostbyname(socket.gethostname()) 
+		self.host = socket.gethostbyname(socket.gethostname()) #'127.0.0.1'#
 		self.port = int(_port)
 		self.connection = None
 		self.address = None
@@ -34,27 +34,21 @@ class Sock:
 
 
 class Headers:
-	def __init__(self, _contentType, _data):
-		self.ct = _contentType
-		self.data = _data
-		if(not _data):
-			self.data = "No Content"
+	def __init__(self):
 		self.next = "\r\n"
 		self.end = "\r\n\r\n"
 		self.okay = "HTTP/1.1 200 OK"
 		self.notFound = "HTTP/1.1 404 NOT FOUND"
 		self.internalError = "HTTP/1.1 500 INTERNAL SERVER ERROR"
-		self.contentType = f"Content-Type: {self.ct}"
-		self.length = f"Content-Length: {len(self.data)}"
 		self.server = "Server: Cthulhu/0.5"
 
-	def header(self, accepted, exists):
-		if(accepted and exists and "image" in self.ct):
-			return bytes(self.okay + self.next + self.contentType + self.next + self.length + self.next + self.server + self.end,'utf-8') + self.data
+	def header(self, accepted, exists, data, contentType):
+		if(accepted and exists and "image" in contentType):
+			return bytes(self.okay + self.next + f"Content-Type: {contentType}" + self.next + f"Content-Length: {len(data)}" + self.next + self.server + self.end,'utf-8') + data
 		elif(accepted and exists):
-			return bytes(self.okay + self.next + self.contentType + self.next + self.length + self.next + self.server + self.end + self.data, 'utf-8')
+			return bytes(self.okay + self.next + f"Content-Type: {contentType}" + self.next + f"Content-Length: {len(data)}" + self.next + self.server + self.end + data, 'utf-8')
 		elif (accepted and not exists):
-			return bytes(self.notFound + self.next + self.contentType + self.next + self.server + self.end, 'utf-8')
+			return bytes(self.notFound + self.next + f"Content-Type: {contentType}" + self.next + self.server + self.end, 'utf-8')
 		else:
 			return bytes(self.internalError + self.end, 'utf-8')
 
