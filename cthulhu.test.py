@@ -18,18 +18,19 @@ async def main():
 	app = App(int(argv['port']), argv["site"])
 
 	
-	try:
-		while True:
-			#await app.get('index.html')
+
+	while True:
+		try:
+			await app.get('/','index.html')
 
 			#await app.get('about.html')
 
 			#await app.get('download.jpeg')
 
-	except KeyboardInterrupt:
-		app.sock.close()
-		sleep(2)
-		sys.exit("Exited Successfully")
+		except KeyboardInterrupt:
+			app.sock.close()
+			sleep(2)
+			sys.exit("Exited Successfully")
 
 if __name__ == "__main__":
 	asyncio.run(main())

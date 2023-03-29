@@ -1,4 +1,4 @@
-import argparse, os, sys, asyncio
+import os, sys, asyncio
 from classes.frapitska import Sock
 from classes.frapitska import Headers
 from classes.reqspliter import ReqSpliter
@@ -9,10 +9,10 @@ from classes.tree import Tree
 class App:
 
 	def __init__(self, _port, _projectFolderPath):
-		#checking if port is an intiger
+
 		if(not isinstance(_port,int)):
 			sys.exit("Port Must Be an Integer")
-		#checking if path exists and if yes storing it in sitePath using the walrus operator
+
 		if(not(os.path.exists(_projectFolderPath))):
 			sys.exit("Path is not valid")
 
@@ -21,29 +21,31 @@ class App:
 		self.reqSpliter = ReqSpliter()
 		self.fileManager = FileManager(self.projectFolderPath)
 		self.cache = Tree()
-		self.request = None
+		#self.request = None
 		self.sock.run()
 
 
+
+
 	#Get Request implimentation
-	async def get(self, path, inFunc = None):
+	async def get(self, alias, path, inFunc = None):
 
 		while True:
-			if(self.request == None):
-				await self.sock.accept()
-				self.request = await self.sock.receive()
+			
+			await self.sock.accept()
+			request = await self.sock.receive()
 			
 
 			headers = Headers()
 			#request = await self.sock.receive()
 			#self.request = request
 			
-			isAccepted, requestDict, requestType, fileRequested, fileExtension, conType = self.reqSpliter.dataPrep(self.request) 
+			isAccepted, requestDict, requestType, fileRequested, fileExtension, conType = self.reqSpliter.dataPrep(request) 
 
 			print(f"\n\npath: {path}\nisAccepted: {isAccepted}\nsplitedZero: {requestDict}\nrequestType:{requestType}\nfileRequested: {fileRequested}\nfileExtension: {fileExtension}\nConType: {conType}\n\n")
 
-			if requestType == "GET" and isAccepted:
-				if not inFunc == None: return inFunc(self.request)
+			if requestType == "GET" and isAccepted and (alias == fileRequested):
+				if not inFunc == None: return inFunc(request)
 				
 
 				data = self.fileManager.readFileContent(path, conType)
@@ -57,9 +59,11 @@ class App:
 
 				#headers = Headers(conType, data)
 				header = headers.header(isAccepted,data,data,conType)
-				print("="*30+f"\n\n{data}\n\n")
+				#print("="*30+f"\n\n{data}\n\n")
 				await self.sock.respond(header)
-				self.request = None
+				#request = None
+				data = None
+				parsedHS = None
 
 #				if not self.cache.isEmpty():
 #					rest = self.cache.getValues(fileRequested)
@@ -79,10 +83,10 @@ class App:
 									
 
 
-				break
+				continue
 			else: 
 				#self.request = None
-				break
+				continue
 
 
 

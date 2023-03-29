@@ -36,9 +36,11 @@ class ReqSpliter:
 
 #Determines the path for the file requested
 	def checkReqFilePath(self, requestDict):
-		#Returning the first element (index 0) cause if any other method is mentioned in the request this might create a bug 
-		print(f"Regex -> checkRegFilePath: {self.regFileName.findall(requestDict['request'])[0]}")
-		return self.regFileName.findall(requestDict["request"])[0]
+		#Returning the first element (index 0) cause if any other method is mentioned in the request this might create a bug or
+		#cause an ssrf csrf
+		#print(f"Regex -> checkRegFilePath: {self.regFileName.findall(requestDict['request'])[0]}")
+		#return self.regFileName.findall(requestDict["request"])[0]
+		return requestDict["request"].split(" ")[1]
 
 #Determines the requested File's extension
 	def determineFileExtFromReq(self, checkReqFilePath):

@@ -1,6 +1,7 @@
 Chtulhu.py: When pasing to header function accesable from Header object i pass data first to varible self.data and then to the function to see if data exists so the request can procced
 fix:pass directly to the header() method so i don't have to create every time an instance of the Header object (make static)
 
+on final from each lib only import used methods for optimization
 
 ReqSpliter: when reterning path i regex out the "/" so i manually put it for the file manager to work
 else the user input on command should have the / to be saved in projectFolderPath 
@@ -17,6 +18,17 @@ Every sock request from each client should be stored in an array
 cause the asyncio interferes with the processing of each
 sock should also not be async
 
+The Sock object should accept and recieve without having to be awaited in every method 
+cause the server wont be able to serve the client any other than the first 
+specified request by the developer, create a deamon thread that will handle each request 
+and send it to the right handler
+
+change determineFileExtFromReq(), headerContentType() in reqSpliter should not check the file requested, cause from now they 
+will be alliased and instead read the files name when specified by the dev, so move them instead to the fileManager
+
+create a request error handler and a logger
+
+recursive get and render href's to client
 
 with asyncio a task should be created for every request made to actually be asyncronous The task should contain{
 	sock,filemanager,reqspliter 
