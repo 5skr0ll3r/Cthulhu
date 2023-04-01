@@ -23,10 +23,6 @@ async def main():
 		try:
 			await app.get('/','index.html')
 
-			#await app.get('about.html')
-
-			#await app.get('download.jpeg')
-
 		except KeyboardInterrupt:
 			app.sock.close()
 			sleep(2)

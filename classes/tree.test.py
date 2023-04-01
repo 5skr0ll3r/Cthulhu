@@ -135,11 +135,11 @@ class Tree:
 				self.addChild(child)
 
 	def __repr__(self):
-		return self.name
+		return f'{self.name}'
 
 	def exists(self, name):
-		for i in range(len(self.children)):
-			if name == self.children[i]:
+		for i in self.children:
+			if name == repr(i):
 				return True
 		return False
 
@@ -210,3 +210,5 @@ t = Tree('files', [
             
 
 t.printTree()
+
+

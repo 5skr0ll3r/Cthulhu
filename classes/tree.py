@@ -14,11 +14,11 @@ class Tree:
 				self.addChild(child)
 
 	def __repr__(self):
-		return self.name
+		return f'{self.name}'
 
 	def exists(self, name):
-		for i in range(len(self.children)):
-			if name == self.children[i]:
+		for i in self.children:
+			if name == repr(i):
 				return True
 		return False
 
@@ -74,39 +74,3 @@ class Tree:
 
 
 
-
-#def main():
-#
-
-#	t = Tree('files', [
-#			Tree('index',[
-#				Tree('index.js'),
-#                Tree('index.css')
-#				]),
-#            Tree('about',[
-#            	Tree('about.js'),
-#                Tree('about.css')
-#                ]),
-#            Tree('login', [
-#            	Tree('log.js'),
-#                Tree('log.css')
-#                ])
-#            ])
-#
-#
-
-#	printTree(t)
-#	
-
-#	print("\n"+"="*12+"\n")
-
-#	t.add_child(Tree('register',[
-#		Tree('reg.css'),
-#		Tree('reg.js')
-#		]
-#	))
-
-#	printTree(t)
-
-#if __name__ == '__main__':
-#	main()

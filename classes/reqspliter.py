@@ -1,19 +1,16 @@
 import re
 
 class ReqSpliter:
-	def __init__(self):
-		self.methods = ("GET","POST","HEAD","DELETE","CONNECT","PUT","OPTIONS","TRACE","PATCH")
-		self.fileExt = ("html","css","js")
-		self.imageExt = ("jpeg","png","jpg","ico")
-		self.regSplit = re.compile(".+.\n")
-		self.regMethod = re.compile("[A-Z]+\S")
-		self.regFileName = re.compile('[a-zA-Z]+\.[a-zA-Z]+')
+	methods = ("GET","POST","HEAD","DELETE","CONNECT","PUT","OPTIONS","TRACE","PATCH")
+	regSplit = re.compile(".+.\n")
+	regMethod = re.compile("[A-Z]+\S")
+	regFileName = re.compile('[a-zA-Z]+\.[a-zA-Z]+')
 
 		#Splites the request headers and stores them in a dictionary for easier access/ first line stored as request
-	def spliter(self,request):
+	def spliter(request):
 	    reqDict = {}
 	    iterZero = True
-	    for i in re.finditer(self.regSplit, request):
+	    for i in re.finditer(ReqSpliter.regSplit, request):
 	        if iterZero:
 	            reqDict["request"] = i.group()
 	            iterZero = False
@@ -22,11 +19,11 @@ class ReqSpliter:
 	    return reqDict
 
 #Checks the type of the request 
-	def checkReqType(self, requestDict):
+	def checkReqType(requestDict):
 		#Returning the first cause if any other method is mentioned in the request this might create a bug 
-		requestType = self.regMethod.findall(requestDict["request"])[0]
+		requestType = ReqSpliter.regMethod.findall(requestDict["request"])[0]
 		print(f"Regex -> requestType: {requestType}")
-		for i in self.methods:
+		for i in ReqSpliter.methods:
 			if i == requestType:
 				return i
 			else:
@@ -35,50 +32,21 @@ class ReqSpliter:
 
 
 #Determines the path for the file requested
-	def checkReqFilePath(self, requestDict):
-		#Returning the first element (index 0) cause if any other method is mentioned in the request this might create a bug or
-		#cause an ssrf csrf
-		#print(f"Regex -> checkRegFilePath: {self.regFileName.findall(requestDict['request'])[0]}")
-		#return self.regFileName.findall(requestDict["request"])[0]
+	def checkReqFilePath(requestDict):
 		return requestDict["request"].split(" ")[1]
 
-#Determines the requested File's extension
-	def determineFileExtFromReq(self, checkReqFilePath):
-		for i in self.fileExt:
-			if i in checkReqFilePath:
-				return i
-			else:
-				continue
-		for x in self.imageExt:
-			if x in checkReqFilePath:
-				return x
-			else:
-				continue
-		return False
 
 
-	def headerContentType(self, determineFileExtFromReq):
-		if determineFileExtFromReq in self.fileExt:
-			return "text/" + determineFileExtFromReq
-		if determineFileExtFromReq in self.imageExt:
-			return "image/" + determineFileExtFromReq
-		else:
-			return "text/plain"
-
-
-	def requestIsAccepted(self, checkReqType, checkReqFilePath, determineFileExtFromReq):
-		if checkReqType and checkReqFilePath and determineFileExtFromReq:
+	def requestIsAccepted(checkReqType):
+		if checkReqType and checkReqType in ReqSpliter.methods:
 			return True 
 		else: 
 			return False
 
 
-	def dataPrep(self, request):
-		requestDict = self.spliter(request)
-		requestType = self.checkReqType(requestDict)
-		prep1 = self.checkReqFilePath(requestDict)
-		fileRequested = self.regFileName.findall(prep1)[0]
-		fileExtension = self.determineFileExtFromReq(fileRequested)
-		conType = self.headerContentType(fileExtension)
-		isAccepted = self.requestIsAccepted(requestType, fileRequested, fileExtension)
-		return isAccepted, requestDict, requestType, fileRequested, fileExtension, conType
+	def dataPrep(request):
+		requestDict = ReqSpliter.spliter(request)
+		requestType = ReqSpliter.checkReqType(requestDict)
+		pathRequested = ReqSpliter.checkReqFilePath(requestDict) #prep1
+		isAccepted = ReqSpliter.requestIsAccepted(requestType)
+		return isAccepted, requestDict, requestType, pathRequested

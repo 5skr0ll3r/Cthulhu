@@ -4,7 +4,7 @@ import socket, asyncio
 class Sock:
 
 	def __init__(self, _port):
-		self.host = socket.gethostbyname(socket.gethostname()) #'127.0.0.1'#
+		self.interface = socket.gethostbyname(socket.gethostname()) #'127.0.0.1'#
 		self.port = int(_port)
 		self.connection = None
 		self.address = None
@@ -12,9 +12,13 @@ class Sock:
 		self.socket = None
 
 	def run(self):
-		self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-		self.socket.bind((self.host, self.port))
-		self.socket.listen()
+		try:
+			self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+			self.socket.bind((self.interface,self.port))
+			self.socket.listen()
+		except OSError:
+			print("Something went wrong")
+			self.close()
 
 	async def accept(self):
 		self.connection, self.address = self.socket.accept()
@@ -26,30 +30,14 @@ class Sock:
 
 	async def respond(self, data):
 		self.connection.sendall(data)
-		self.connection.close()
+		#self.connection.close()
 
 	def close(self):
-		self.socket = None
+		try: 
+			self.socket.shutdown(socket.SHUT_RDWR)
+		except (socket.error, OSError, ValueError):
+			pass
+		self.socket.close()
 
-
-
-class Headers:
-	def __init__(self):
-		self.next = "\r\n"
-		self.end = "\r\n\r\n"
-		self.okay = "HTTP/1.1 200 OK"
-		self.notFound = "HTTP/1.1 404 NOT FOUND"
-		self.internalError = "HTTP/1.1 500 INTERNAL SERVER ERROR"
-		self.server = "Server: Cthulhu/0.5"
-
-	def header(self, accepted, exists, data, contentType):
-		if(accepted and exists and "image" in contentType):
-			return bytes(self.okay + self.next + f"Content-Type: {contentType}" + self.next + f"Content-Length: {len(data)}" + self.next + self.server + self.end,'utf-8') + data
-		elif(accepted and exists):
-			return bytes(self.okay + self.next + f"Content-Type: {contentType}" + self.next + f"Content-Length: {len(data)}" + self.next + self.server + self.end + data, 'utf-8')
-		elif (accepted and not exists):
-			return bytes(self.notFound + self.next + f"Content-Type: {contentType}" + self.next + self.server + self.end, 'utf-8')
-		else:
-			return bytes(self.internalError + self.end, 'utf-8')
 
 
