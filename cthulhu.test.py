@@ -1,4 +1,4 @@
-import argparse, asyncio,sys
+import argparse, sys
 from time import sleep
 from classes.cthulhu import App
 
@@ -10,26 +10,24 @@ def args():
 	return vars(ap.parse_args())
 
 
-
-async def main():
+def main():
 
 	argv = args()
-
 	app = App(int(argv['port']), argv["site"])
+	try:
 
-	
+		app.get('/','index.html')
+		app.get('/about', 'about.html')
+		app.listen()
 
-	while True:
-		try:
-			await app.get('/','index.html')
-
-		except KeyboardInterrupt:
-			app.sock.close()
-			sleep(2)
-			sys.exit("Exited Successfully")
+	except KeyboardInterrupt:
+		
+		app.close()
+		sleep(2)
+		sys.exit("Exited Successfully")
 
 if __name__ == "__main__":
-	asyncio.run(main())
+	main()
 
 
 

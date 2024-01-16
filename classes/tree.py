@@ -53,7 +53,7 @@ class Tree:
 			for n in range(len(self.children[i].children)):
 				print("\n\n" + str(self.name) + " -> " + str(self.children) + " -> " + str(self.children[i]) + " : " + str(self.children[i].children[n]) + "\n\n")
 
-#Only Works For the 3Layer structure
+	#Only Works For the 3Layer structure
 	def insertArray(self, fileRequested, array):
 		if not self.exists(fileRequested) and not array == False:
 			self.addChild(Tree(fileRequested,[

@@ -5,4 +5,7 @@ Version 0.3 Classified most of the code,
             rewritten most of the code, images work
 	    added async functionallity (or so i thought)
 
-Version 0.4,0.5,0.6 Refactoring code
+Version 0.4,0.5,0.6,0.7,0.8 Refactoring code
+
+Version 0.9 Finally made it as i wanted almost
+        i'm in the right path okay?

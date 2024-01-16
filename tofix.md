@@ -1,8 +1,9 @@
-on final from each lib only import used methods for optimization
 
-ReqSpliter: when reterning path i regex out the "/" so i manually put it for the file manager to work
-else the user input on command should have the / to be saved in projectFolderPath 
-fix: automate the process with a simple check
+make a daemon that will list all incoming connections and then serve them
+in a fifo order 
+
+
+on final from each lib only import used methods for optimization
 
 Cthulhu: get: move almost everything into a controller for cleaner code
 
@@ -20,7 +21,11 @@ add a timeout if the client does not request the rest of the files that are cach
 
 create a renderer that shall read the files and if they extra constructs them and then serve them to the client
 
+have to somehow close connections
 recursive get and render href's to client
+
+
+when requested file is from local cache search and compare by name to remove it
 
 with asyncio a task should be created for every request made to actually be asyncronous The task should contain{
 	sock,filemanager,reqspliter 
@@ -52,9 +57,13 @@ Convert request headers to dictionary for easy access
 ReqSpliter: method: dataPrep() the splitedList online returns the first element of the actuall list
 Fix: change name
 
+create client object with connection, address, request
 
 right now dev wont be able to have a secondary file path with any "/" have to fix it later
 
+ReqSpliter: when reterning path i regex out the "/" so i manually put it for the file manager to work
+else the user input on command should have the / to be saved in projectFolderPath 
+fix: automate the process with a simple check
 
 
 # Snippets i want to remember

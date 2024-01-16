@@ -1,14 +1,12 @@
-import socket, asyncio
-
+import socket
+from sys import exit
+from classes.datastructs import Client
 
 class Sock:
 
 	def __init__(self, _port):
 		self.interface = socket.gethostbyname(socket.gethostname()) #'127.0.0.1'#
 		self.port = int(_port)
-		self.connection = None
-		self.address = None
-		self.dataReceived = None
 		self.socket = None
 
 	def run(self):
@@ -17,20 +15,12 @@ class Sock:
 			self.socket.bind((self.interface,self.port))
 			self.socket.listen()
 		except OSError:
-			print("Something went wrong")
+			exit("Something went wrong got OSError on Sock.run()")
 			self.close()
 
-	async def accept(self):
-		self.connection, self.address = self.socket.accept()
-
-	async def receive(self):
-		self.dataReceived = self.connection.recv(3000).decode('utf-8')
-		print(f"\nData received:\n{self.dataReceived}\n\n")
-		return self.dataReceived
-
-	async def respond(self, data):
-		self.connection.sendall(data)
-		#self.connection.close()
+	def accept(self):
+		connection, address = self.socket.accept()
+		return Client(address, connection)
 
 	def close(self):
 		try: 

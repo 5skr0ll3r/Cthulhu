@@ -1,86 +1,74 @@
-import os, sys, asyncio
-from classes.frapitska import Sock
-from classes.headconsrtuctor import Headers
-from classes.reqspliter import ReqSpliter
+import os, sys, _thread
+from classes.serversocket import Sock
 from classes.filemanager import FileManager
 from classes.tree import Tree
+from classes.requesthandler import RequestHandler
+from classes.datastructs import Client
+from classes.datastructs import Endpoint
 from time import sleep
+
 
 
 class App:
 
 	def __init__(self, _port, _projectFolderPath):
 
+		#self.daemon = Daemon(_port,_projectFolderPath)
 		if(not isinstance(_port,int)):
 			sys.exit("Port Must Be an Integer")
-
+		if(not _projectFolderPath[-1] == "/"):
+			_projectFolderPath += "/"
 		if(not(os.path.exists(_projectFolderPath))):
 			sys.exit("Path is not valid")
 
 		self.sock = Sock(_port)
 		self.projectFolderPath = _projectFolderPath
 		FileManager.projectFolderPath = _projectFolderPath
-		self.cache = Tree()
+		#self.cache = Tree()
 		self.sock.run()
+		self.endpoints = []
+		#TODO: parse all registered endpoint static file and
+		#add them to the sitemap and serve them all
+		self.sitemap = []
+		
+
+	####Start Endpoint registration###
+	def get(self, endpoint, local_path, callback=None):
+		self.endpoints.append(Endpoint("GET", endpoint, local_path, callback))
 
 
 
-
-	#Get Request implimentation
-	async def get(self, alias, path, inFunc = None):
-		data = FileManager.readFileContent(path)
-		parsedHS = FileManager.parserHTML(data, path)
-		print(f"\n\nparsed:\n{parsedHS}\n\n")
-		self.cache.insertArray(alias, parsedHS)
-		self.cache.printTree()
-		print(f"\n\nCached:\n{self.cache.getValues(alias)}\n\n")
-		while True:
-			
-			await self.sock.accept()
-			request = await self.sock.receive()
-			
-			isAccepted, requestDict, requestType, pathRequested = ReqSpliter.dataPrep(request) 
-			contentType = FileManager.headerContentType(path)
-
-			print(f"\n\npath: {path}\nisAccepted: {isAccepted}\nsplitedZero: {requestDict}\nrequestType:{requestType}\npathRequested: {pathRequested}\n\nConType: {contentType}\n\n")
-
-			if requestType == "GET" and isAccepted and (alias == pathRequested):
-				if inFunc != None: return inFunc(request)
-
-				header = Headers.header(isAccepted, data, contentType)
-
-				await self.sock.respond(header)
-
-				cached = self.cache.getValues(alias)
-				i = 0
-
-				while i <= len(cached) - 1:
-					print(f"\n\ni:{i}\n\n")
-					nextRequest = await self.sock.receive()
-
-					isAccepted, requestDict, requestType, newPathRequested = ReqSpliter.dataPrep(nextRequest)
-					print(f"\n\npath: {path}\nisAccepted: {isAccepted}\nsplitedZero: {requestDict}\nrequestType:{requestType}\npathRequested: {pathRequested}\n\nConType: {contentType}\n\n")
-
-					if newPathRequested.startswith("/"): cachedPath = newPathRequested[1:]
-					else: cachedPath = newPathRequested
-					newData = FileManager.readFileContent(cachedPath)
-					if not cachedPath: continue
-					newContentType = FileManager.headerContentType(cachedPath)
-
-					header = Headers.header(isAccepted, newData, newContentType)
-
-					await self.sock.respond(header)
-					i += 1
-					
-
-				#self.sock.close()
-				sleep(.1)
-				continue
-			else: 
-
-				continue
-
-
-
-	async def post(self, apiPath, inFunc = None):
+	def post(self, endpoint, callback=None):
 		pass
+	####End Endpoint registration###
+
+
+	###Start Middleware Registration###
+	def use(self, endpoint, callback=None):
+		pass
+	###End Middleware Registration###
+
+
+	def on_new_client(self, client):
+		RequestHandler.requestHandler(client, self.endpoints)
+
+	def listen(self, callback=None):
+		while True:
+			client = self.sock.accept()
+			_thread.start_new_thread(self.on_new_client,(client,))
+
+
+	def close(self):
+		self.sock.close()
+		
+
+#def main():
+#	app = App(8000)
+#	app.get("/", "index.html")
+#	app.listen()
+#if __name__ == "__main__":
+#	main()
+
+#python3 cthulhu.py > res.tmp
+#seq 10000 | xargs -n 1 -P 200 -I {} curl http://192.168.1.126:8000/
+#cat res.tmp | uniq -c
