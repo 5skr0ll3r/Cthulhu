@@ -1,5 +1,4 @@
 from src.datastructs import Response, Request, Endpoint, Client
-from src.filemanager import FileManager
 
 
 class RequestHandler:

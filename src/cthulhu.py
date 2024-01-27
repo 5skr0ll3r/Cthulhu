@@ -1,6 +1,5 @@
 import os, sys, _thread
 from src.serversocket import Sock
-from src.filemanager import FileManager
 from src.requesthandler import RequestHandler
 from src.datastructs import Client
 from src.datastructs import Endpoint
@@ -10,18 +9,10 @@ from time import sleep
 
 class App:
 
-	def __init__(self, _interface: str = None, _port: int = 8000, _workingDirectory: str = None):
+	def __init__(self, _interface: str = None, _port: int = 8000):
 		if(not isinstance(_port,int)):
 			sys.exit("Port Must Be an Integer")
-#		if(not _workingDirectory[-1] == "/"):
-#			_workingDirectory += "/"
-#		if(not(os.path.exists(_workingDirectory))):
-#			sys.exit(f"Path: {_workingDirectory} is not valid")
-
 		self.sock = Sock(_interface, _port)
-		self.working_directory = _workingDirectory
-		FileManager.working_directory = _workingDirectory
-		#self.cache = Tree()
 		self.sock.run()
 		self.endpoints = []
 		#TODO: parse all registered endpoint static file and
