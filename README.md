@@ -1,18 +1,16 @@
 # Cthulhu
 ## Is a webserver (Only For GET Requests)uwu
 
-Modules used: `argparse, os, sys, asyncio, re, socket`
+Usage: `python3 file.py -i <interface> -p <port_to_run_on> `
 
-Usage: `python3 cthulhu.py -p <port_to_run_on> -s <project_directory>`
+Test: `python3 server.py -i 127.0.0.1 -p 8000`
 
-Test: `python3 cthulhu.py -p 8000 -s test`
-
-Example url: `http://<ip>:<port>/index.html`
+Example url: `http://<ip>:<port>/`
 
 Clone with git: `git clone https://github.com/5skr0ll3r/Cthulhu`
 
 
-## Explain 0.9:
+## Explain 0.9.1:
 In the current version we only get to see
 `GET` being implemented for stand alone static
 files, the version is 0.9 cause this is the 
