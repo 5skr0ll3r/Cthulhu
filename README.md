@@ -52,7 +52,6 @@ All callbacks will be provided with the __Request__ and __Response__  objects, h
 import argparse, sys
 from time import sleep
 from src.cthulhu import App
-from src.filemanager import FileManager
 from src.datastructs import Request, Response
 
 
