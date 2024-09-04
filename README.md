@@ -1,11 +1,7 @@
 # Cthulhu
-## Is a webserver (Only For GET Requests)uwu
+## Is a webserver
 
-Modules used: `argparse, os, sys, asyncio, re, socket`
-
-Usage: `python3 cthulhu.py -p <port_to_run_on> -s <project_directory>`
-
-Test: `python3 cthulhu.py -p 8000 -s test`
+Usage: `python3 cthulhu.py -i <interface> -p <port>`
 
 Example url: `http://<ip>:<port>/index.html`
 
