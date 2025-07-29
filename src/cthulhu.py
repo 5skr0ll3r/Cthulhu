@@ -8,7 +8,6 @@ from src.utils import NIY
 from src.report import Log
 
 
-#TODO: Add method to not allow other methods than get if https is not used in order to prevent ManInTheMiddleAttacks
 class App:
 
 	def __init__(self, _interface: str = None, _port: int = 8000):
